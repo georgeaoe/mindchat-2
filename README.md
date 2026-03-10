@@ -1,4 +1,4 @@
-# yuan-Chat
+# MindChat
 
 一个基于 React + Node.js 构建的现代化 AI 对话应用，采用流式输出技术，提供流畅的实时对话体验。
 
@@ -16,12 +16,14 @@
 ## 技术栈
 
 ### 前端
+
 - **框架**: React 18.2.0
 - **构建工具**: Vite 5.2.8
 - **状态管理**: React Context API
 - **样式**: 自定义 CSS
 
 ### 后端
+
 - **运行时**: Node.js
 - **HTTP 服务器**: 原生 http/https 模块
 - **AI 服务**: 讯飞星火 MaaS API
@@ -31,6 +33,7 @@
 本项目按照[流式对话渲染模块设计](https://www.yuque.com/guluguluwater-qkq0t/otcxaz/pihgy9hz1r2tpfth)文档实现，采用三层架构：
 
 ### 1. 流式解析层
+
 - 使用 `fetch + ReadableStream` 接收流式数据
 - 使用 `TextDecoder('utf-8', { stream: true })` 进行增量解码
 - 双缓冲区设计：SSE 解析缓冲区 + 渲染缓冲区
@@ -38,12 +41,14 @@
 - 支持 AbortController 随时中断生成
 
 ### 2. 消息状态管理层
+
 - 管理消息列表状态
 - 支持生成状态管理（generating/completed/aborted/failed）
 - 智能滚动策略：用户滚动时暂停自动滚动，1 秒后恢复
 - 作为唯一事实来源
 
 ### 3. 渲染与交互层
+
 - 消息内容展示
 - 自动滚动策略
 - 输入框与中断按钮交互
@@ -63,8 +68,8 @@
 ### 1. 克隆仓库
 
 ```bash
-git clone https://github.com/gulugulu33/yuan-Chat.git
-cd yuan-Chat
+git clone https://github.com/georgeaoe/mindchat-2.git
+cd MindChat
 ```
 
 ### 2. 安装依赖
@@ -83,6 +88,7 @@ PORT=3001
 ```
 
 获取讯飞星火 API Key：
+
 1. 访问 [讯飞开放平台](https://www.xfyun.cn/)
 2. 注册账号并创建应用
 3. 获取 API Key
@@ -150,6 +156,7 @@ yuan-Chat/
 ### 使用预设问题
 
 点击首页的预设问题卡片，快速开始对话：
+
 - 建议一些即将自驾游时可以去的美丽景点
 - 简要总结一下"城市规划"这个概念
 - 为我们的团队拓展活动集思广益
@@ -174,20 +181,24 @@ yuan-Chat/
 ## 核心设计原则
 
 ### 1. 逐 token 可感知渲染
+
 - 通过节奏控制，用户看到"正在逐步输出"的效果
 - 避免网络抖动导致的跳变式刷新
 
 ### 2. 渲染节奏可控
+
 - 数据接收节奏：网络和模型输出（不可控）
 - 渲染节奏：每 50ms 固定间隔（可控）
 - 两者完全解耦
 
 ### 3. 中断优先级最高
+
 - 用户随时可以点击停止按钮
 - AbortController 立即中断 fetch 请求
 - flush 所有剩余内容后停止
 
 ### 4. 滚动跟随优化
+
 - 仅当用户未主动离开底部时，才启用自动滚动
 - 通过滚动距离阈值判断（< 100px）
 - 在 flush 阶段触发滚动，降低频率
@@ -218,6 +229,7 @@ yuan-Chat/
 ### POST /api/chat
 
 请求体：
+
 ```json
 {
   "messages": [
@@ -270,11 +282,11 @@ const isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
 
 ```javascript
 const requestBody = {
-  model: 'xop3qwen1b7',
+  model: "xop3qwen1b7",
   messages: messages,
   max_tokens: 4000,
   temperature: 0.7,
-  stream: true
+  stream: true,
 };
 ```
 
@@ -286,19 +298,20 @@ const requestBody = {
 
 ```javascript
 const options = {
-  hostname: 'your-api-host.com',
+  hostname: "your-api-host.com",
   port: 443,
-  path: '/v1/chat/completions',
-  method: 'POST',
+  path: "/v2/chat/completions",
+  method: "POST",
   headers: {
-    'Authorization': `Bearer ${API_KEY}`
-  }
+    Authorization: `Bearer ${API_KEY}`,
+  },
 };
 ```
 
 ### 如何调整流式输出速度？
 
 在 `src/services/streamParser.js` 中调整：
+
 - `flushInterval` 的间隔时间
 - `chunkSize` 的大小
 
