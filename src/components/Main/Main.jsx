@@ -1,8 +1,11 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, Suspense, lazy } from "react";
 import "./Main.css";
 import { assets } from "../../assets/assets";
 import { Context } from "../../context/Context";
-import MarkdownRenderer from "../MarkdownRenderer/MarkdownRenderer";
+
+const MarkdownRenderer = lazy(
+  () => import("../MarkdownRenderer/MarkdownRenderer"),
+);
 
 const Main = () => {
   const {
@@ -49,7 +52,7 @@ const Main = () => {
           <>
             <div className="greet">
               <p>
-                <span>hello, This is MindChat</span>
+                <span>Hello, this is MindChat</span>
               </p>
               <p>How can I help you?</p>
             </div>
@@ -114,7 +117,13 @@ const Main = () => {
                       </div>
                     ) : (
                       <div className="markdown-content">
-                        <MarkdownRenderer content={message.content} />
+                        <Suspense
+                          fallback={
+                            <div className="markdown-loading">Loading...</div>
+                          }
+                        >
+                          <MarkdownRenderer content={message.content} />
+                        </Suspense>
                       </div>
                     )}
                     {message.status === "aborted" && (
