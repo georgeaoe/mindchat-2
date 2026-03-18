@@ -35,10 +35,13 @@ export default defineConfig({
           return "assets/[name]-[hash][extname]";
         },
         manualChunks: {
-          // Google AI SDK - 按需加载
           ai: ["@google/generative-ai"],
-          // Markdown 渲染相关库 - 按需加载
-          markdown: ["react-markdown", "rehype-highlight", "rehype-raw", "remark-gfm"],
+          markdown: [
+            "react-markdown",
+            "rehype-highlight",
+            "rehype-raw",
+            "remark-gfm",
+          ],
         },
       },
     },
